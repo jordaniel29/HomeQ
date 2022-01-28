@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
-export default function SignupScreen() {
+export default function SignupScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
@@ -41,14 +41,18 @@ export default function SignupScreen() {
             placeholder="Password"
           ></TextInput>
         </View>
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.registerButton}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <View style={styles.rowContainer}>
-          <TouchableOpacity>
-            <Text style={styles.registerText}>Login</Text>
+          <Text style={styles.descText}>Already have an account? </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("LoginScreen");
+            }}
+          >
+            <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
-          <Text style={styles.hereText}> here</Text>
         </View>
       </View>
     </ScrollView>
@@ -95,12 +99,12 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 15,
   },
-  loginButton: {
+  registerButton: {
     width: 330,
     height: 60,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#3585C6",
+    backgroundColor: "#58626B",
     borderRadius: 10,
     marginTop: 20,
     marginBottom: 5,
@@ -111,13 +115,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  registerText: {
+  loginText: {
     fontFamily: "Roboto",
     fontSize: 18,
     fontWeight: "bold",
     color: "#3585C6",
   },
-  hereText: {
+  descText: {
     fontFamily: "Roboto",
     fontSize: 18,
     fontWeight: "bold",

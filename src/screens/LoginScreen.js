@@ -11,7 +11,7 @@ import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
@@ -33,14 +33,23 @@ export default function LoginScreen() {
             placeholder="Password"
           ></TextInput>
         </View>
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => {
+            navigation.navigate("MainApp");
+          }}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <View style={styles.rowContainer}>
-          <TouchableOpacity>
+          <Text style={styles.descText}>Don't have an account? </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SignupScreen");
+            }}
+          >
             <Text style={styles.registerText}>Register</Text>
           </TouchableOpacity>
-          <Text style={styles.hereText}> here</Text>
         </View>
       </View>
     </ScrollView>
@@ -109,7 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#3585C6",
   },
-  hereText: {
+  descText: {
     fontFamily: "Roboto",
     fontSize: 18,
     fontWeight: "bold",

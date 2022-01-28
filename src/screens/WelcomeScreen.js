@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require("../assets/house.png")} />
@@ -11,10 +12,16 @@ export default function WelcomeScreen() {
         <Text style={styles.title}>omeQ</Text>
       </View>
       <Text style={styles.subTitle}>Finding a good quality home for you</Text>
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => navigation.navigate("LoginScreen")}
+      >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.registerButton}>
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={() => navigation.navigate("SignupScreen")}
+      >
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
     </View>
