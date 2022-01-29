@@ -6,12 +6,33 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submit = async () => {
+    const auth = getAuth();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      Alert.alert("Registration Failed!", errorMessage);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
@@ -24,21 +45,23 @@ export default function LoginScreen({ navigation }) {
             color="black"
             style={styles.icon}
           />
-          <TextInput style={styles.textInput} placeholder="Email"></TextInput>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Email"
+            value={email}
+            onChangeText={(value) => setEmail(value)}
+          ></TextInput>
         </View>
         <View style={styles.inputContainer}>
           <Entypo name="key" size={25} color="black" style={styles.icon} />
           <TextInput
             style={styles.textInput}
             placeholder="Password"
+            value={password}
+            onChangeText={(value) => setPassword(value)}
           ></TextInput>
         </View>
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => {
-            navigation.navigate("MainApp");
-          }}
-        >
+        <TouchableOpacity style={styles.loginButton} onPress={submit}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <View style={styles.rowContainer}>

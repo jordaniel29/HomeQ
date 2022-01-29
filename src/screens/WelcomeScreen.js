@@ -1,9 +1,25 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { initializeApp, getApps } from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
 
 export default function WelcomeScreen({ navigation }) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDAAvHOxEecT3pSDlTZZ0TFc9IKCK9HoBk",
+    authDomain: "homeq-1397b.firebaseapp.com",
+    projectId: "homeq-1397b",
+    storageBucket: "homeq-1397b.appspot.com",
+    messagingSenderId: "620882512450",
+    appId: "1:620882512450:web:d2d95df4e4fea492cd3bdb",
+    measurementId: "G-2M5QYXN7J1",
+  };
+
+  // Initialize Firebase
+  if (!getApps().length) {
+    initializeApp(firebaseConfig);
+  }
+
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require("../assets/house.png")} />

@@ -1,8 +1,11 @@
 import "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import WelcomeScreen from "../screens/WelcomeScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -14,29 +17,48 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function Router() {
+  const [userToken, setUserToken] = useState("");
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        setUserToken(user.getIdToken());
+      } else {
+        setUserToken("");
+      }
+    });
+  }, []);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="WelcomeScreen"
-          component={WelcomeScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignupScreen"
-          component={SignupScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MainApp"
-          component={MainApp}
-          options={{ headerShown: false }}
-        />
+      <Stack.Navigator initialRouteName="Login">
+        {!userToken ? (
+          <>
+            <Stack.Screen
+              name="WelcomeScreen"
+              component={WelcomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SignupScreen"
+              component={SignupScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            name="MainApp"
+            component={MainApp}
+            options={{ headerShown: false }}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,13 +6,37 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function SignupScreen({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submit = async () => {
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      Alert.alert("Registration Success!");
+      navigation.navigate("LoginScreen");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      Alert.alert("Registration Failed!", errorMessage);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
@@ -32,16 +56,23 @@ export default function SignupScreen({ navigation }) {
             color="black"
             style={styles.icon}
           />
-          <TextInput style={styles.textInput} placeholder="Email"></TextInput>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Email"
+            value={email}
+            onChangeText={(value) => setEmail(value)}
+          ></TextInput>
         </View>
         <View style={styles.inputContainer}>
           <Entypo name="key" size={25} color="black" style={styles.icon} />
           <TextInput
             style={styles.textInput}
             placeholder="Password"
+            value={password}
+            onChangeText={(value) => setPassword(value)}
           ></TextInput>
         </View>
-        <TouchableOpacity style={styles.registerButton}>
+        <TouchableOpacity style={styles.registerButton} onPress={submit}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <View style={styles.rowContainer}>
