@@ -12,9 +12,14 @@ import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 export default function SignupScreen({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -27,9 +32,9 @@ export default function SignupScreen({ navigation }) {
         password
       );
       const user = userCredential.user;
-
-      Alert.alert("Registration Success!");
-      navigation.navigate("LoginScreen");
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+      });
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -47,6 +52,8 @@ export default function SignupScreen({ navigation }) {
           <TextInput
             style={styles.textInput}
             placeholder="Nama Lengkap"
+            value={name}
+            onChangeText={(value) => setName(value)}
           ></TextInput>
         </View>
         <View style={styles.inputContainer}>
