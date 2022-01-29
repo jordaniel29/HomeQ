@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@firebase/database": "^0.12.5",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^14.3.0",
     "@react-native-firebase/auth": "^14.3.0",

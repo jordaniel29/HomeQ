@@ -8,6 +8,7 @@ export default function WelcomeScreen({ navigation }) {
   const firebaseConfig = {
     apiKey: "AIzaSyDAAvHOxEecT3pSDlTZZ0TFc9IKCK9HoBk",
     authDomain: "homeq-1397b.firebaseapp.com",
+    databaseURL: "https://homeq-1397b-default-rtdb.firebaseio.com",
     projectId: "homeq-1397b",
     storageBucket: "homeq-1397b.appspot.com",
     messagingSenderId: "620882512450",
