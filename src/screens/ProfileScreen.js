@@ -24,7 +24,7 @@ export default function ProfileScreen() {
         <Ionicons name="person-circle-sharp" size={140} color="black" />
         <View>
           <Text style={styles.name}>{user.displayName}</Text>
-          <Text style={styles.point}>0 point</Text>
+          <Text style={styles.point}>{user.email}</Text>
         </View>
       </View>
       <View style={styles.contentBottom}>

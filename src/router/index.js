@@ -12,9 +12,12 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import DetailScreen from "../screens/DetailScreen";
+import HouseList from "../components/HouseList";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
 export default function Router() {
   const [userToken, setUserToken] = useState("");
@@ -35,7 +38,7 @@ export default function Router() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {!userToken ? (
-          <>
+          <Stack.Group>
             <Stack.Screen
               name="WelcomeScreen"
               component={WelcomeScreen}
@@ -51,7 +54,7 @@ export default function Router() {
               component={SignupScreen}
               options={{ headerShown: false }}
             />
-          </>
+          </Stack.Group>
         ) : (
           <Stack.Screen
             name="MainApp"
@@ -63,6 +66,21 @@ export default function Router() {
     </NavigationContainer>
   );
 }
+
+const HomeStackScreen = () => (
+  <HomeStack.Navigator>
+    <HomeStack.Screen
+      name="Home"
+      component={HomeScreen}
+      options={{ headerShown: false }}
+    />
+    <HomeStack.Screen
+      name="Detail"
+      component={DetailScreen}
+      options={{ headerShown: false }}
+    />
+  </HomeStack.Navigator>
+);
 
 const MainApp = () => (
   <Tab.Navigator
@@ -87,7 +105,7 @@ const MainApp = () => (
   >
     <Tab.Screen
       name="Home"
-      component={HomeScreen}
+      component={HomeStackScreen}
       options={{ headerShown: false }}
     />
     <Tab.Screen
