@@ -9,6 +9,7 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function ProfileScreen() {
   const auth = getAuth();
   const user = auth.currentUser;
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -28,10 +29,6 @@ export default function ProfileScreen() {
         </View>
       </View>
       <View style={styles.contentBottom}>
-        <TouchableOpacity style={styles.touchable}>
-          <FontAwesome name="pencil" size={30} color="#58626B" />
-          <Text style={styles.editTxt}>Edit Profile</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.touchable} onPress={logout}>
           <MaterialIcons name="logout" size={30} color="#D23F3F" />
           <Text style={styles.logoutTxt}>Logout</Text>

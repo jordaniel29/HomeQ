@@ -13,7 +13,6 @@ import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import DetailScreen from "../screens/DetailScreen";
-import HouseList from "../components/HouseList";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

@@ -1,10 +1,53 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { getDatabase, ref, child, get } from "firebase/database";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { collection, addDoc } from "firebase/firestore";
 
-export default function DetailScreen() {
+export default function DetailScreen({ route, navigation }) {
+  const { id, type } = route.params;
+  const [item, setItem] = useState([]);
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const handleError = (err) => {
+    console.warn("Error Status: ", err.message);
+    console.warn("Error Message: ", err.response.data);
+    ToastAndroid.show(err.response.data.message, 3000);
+  };
+
+  const purchase = async () => {
+    const db = getFirestore();
+
+    try {
+      const docRef = await addDoc(collection(db, "cart"), item);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  const getItem = async () => {
+    try {
+      const dbRef = ref(getDatabase());
+      const snapshot = await get(child(dbRef, type + "/house" + id));
+      if (snapshot.exists()) {
+        const temp = snapshot.val();
+        setItem(temp);
+      } else {
+        console.log("No data available");
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    getItem();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
@@ -15,20 +58,17 @@ export default function DetailScreen() {
           style={styles.image}
         />
       </View>
-      <TouchableOpacity style={styles.backBtn}>
-        <Ionicons name="arrow-back-sharp" size={25} color="#3585C6" />
-      </TouchableOpacity>
-      <Text style={styles.name}>NAMA RUMAH</Text>
-      <Text style={styles.location}>Jakarta</Text>
+      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.location}>{item.city}</Text>
       <Text style={styles.subTitle}>Specifications</Text>
       <View style={styles.detailContainer}>
         <View style={styles.iconContainer}>
           <FontAwesome5 name="bed" size={24} color="black" />
-          <Text style={styles.iconText}>2</Text>
+          <Text style={styles.iconText}>{item.bedroom}</Text>
         </View>
         <View style={styles.iconContainer}>
           <FontAwesome5 name="toilet" size={24} color="black" />
-          <Text style={styles.iconText}>1</Text>
+          <Text style={styles.iconText}>{item.toilet}</Text>
         </View>
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons
@@ -36,17 +76,20 @@ export default function DetailScreen() {
             size={30}
             color="black"
           />
-          <Text style={styles.iconText}>40 m2</Text>
+          <Text style={styles.iconText}>{item.area} m2</Text>
         </View>
       </View>
       <Text style={styles.subTitle}>Description</Text>
-      <Text style={styles.desc}>
-        Jual Murah Rumah Di Balikpapan Kalimantan Timur. Nyaman polll
-      </Text>
+      <Text style={styles.desc}>{item.desc}</Text>
       <View style={styles.bottom}>
-        <Text style={styles.harga}>Rp 200jt</Text>
-        <TouchableOpacity style={styles.purchaseBtn}>
-          <Text style={styles.purchaseTxt}>Buy</Text>
+        <Text style={styles.harga}>
+          Rp
+          {item.price <= 1000
+            ? " " + item.price + "Jt"
+            : " " + item.price / 1000 + "M"}
+        </Text>
+        <TouchableOpacity style={styles.purchaseBtn} onPress={purchase()}>
+          <Text style={styles.purchaseTxt}>{type}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -57,17 +100,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F4F4F4",
-  },
-  backBtn: {
-    position: "absolute",
-    top: 40,
-    left: 20,
-    width: 30,
-    height: 30,
-    borderRadius: 50,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
   },
   imgContainer: {
     width: "100%",

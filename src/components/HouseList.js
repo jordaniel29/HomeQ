@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { HouseContext } from "./HouseContext";
 
-export default function HouseList({ navigation }) {
+export default function HouseList() {
   const [outputList] = useContext(HouseContext);
   const [buyList] = [outputList[0]];
   const [rentList] = [outputList[1]];
   const [activeBtn, setActiveBtn] = useState("Buy");
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -63,7 +64,7 @@ export default function HouseList({ navigation }) {
             <TouchableOpacity
               style={styles.touchableContainer}
               onPress={() => {
-                navigation.push("Detail");
+                navigation.navigate("Detail", { id: item.id, type: activeBtn });
               }}
             >
               <View style={styles.itemContainer}>
