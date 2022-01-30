@@ -1,16 +1,22 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useState, useContext, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 import { getDatabase, ref, child, get } from "firebase/database";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { collection, addDoc } from "firebase/firestore";
 
 export default function DetailScreen({ route, navigation }) {
   const { id, type } = route.params;
   const [item, setItem] = useState([]);
-  const auth = getAuth();
-  const user = auth.currentUser;
 
   const handleError = (err) => {
     console.warn("Error Status: ", err.message);
@@ -20,10 +26,13 @@ export default function DetailScreen({ route, navigation }) {
 
   const purchase = async () => {
     const db = getFirestore();
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const uid = user.uid;
 
     try {
-      const docRef = await addDoc(collection(db, "cart"), item);
-      console.log("Document written with ID: ", docRef.id);
+      const docRef = await addDoc(collection(db, "cart"), { ...item, uid });
+      Alert.alert("Purchase Success");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -88,7 +97,12 @@ export default function DetailScreen({ route, navigation }) {
             ? " " + item.price + "Jt"
             : " " + item.price / 1000 + "M"}
         </Text>
-        <TouchableOpacity style={styles.purchaseBtn} onPress={purchase()}>
+        <TouchableOpacity
+          style={styles.purchaseBtn}
+          onPress={() => {
+            purchase();
+          }}
+        >
           <Text style={styles.purchaseTxt}>{type}</Text>
         </TouchableOpacity>
       </View>

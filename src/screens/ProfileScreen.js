@@ -1,14 +1,35 @@
 import { StyleSheet, Text, View, Button } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { doc, onSnapshot } from "firebase/firestore";
+import { getFirestore, collection, query, where } from "firebase/firestore";
 
 export default function ProfileScreen() {
   const auth = getAuth();
   const user = auth.currentUser;
+  const [transaction, setTransaction] = useState("");
+  const [spent, setSpent] = useState("");
+
+  const updateData = async () => {
+    const db = getFirestore();
+    const uid = user.uid;
+    const q = query(collection(db, "cart"), where("uid", "==", uid));
+
+    const unsub = onSnapshot(q, (collection) => {
+      let totalSpent = 0;
+      let countTrans = 0;
+      collection.forEach((doc) => {
+        totalSpent += doc.data().price;
+        countTrans += 1;
+      });
+      setTransaction(countTrans);
+      setSpent(totalSpent);
+    });
+  };
 
   const logout = async () => {
     try {
@@ -19,6 +40,11 @@ export default function ProfileScreen() {
       Alert.alert("Registration Failed!", errorMessage);
     }
   };
+
+  useEffect(() => {
+    updateData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.contentTop}>
@@ -26,6 +52,21 @@ export default function ProfileScreen() {
         <View>
           <Text style={styles.name}>{user.displayName}</Text>
           <Text style={styles.point}>{user.email}</Text>
+        </View>
+      </View>
+      <View style={styles.topContent}>
+        <View style={styles.numTransactionContainer}>
+          <Text style={styles.number}>
+            {transaction == 0 ? 0 : transaction}
+          </Text>
+          <Text style={styles.desc}>Transactions</Text>
+        </View>
+        <View style={styles.numTransactionContainer}>
+          <Text style={styles.number}>
+            {spent == 0 ? 0 : ""}
+            {spent <= 1000 ? spent + "Jt" : spent / 1000 + "M"}
+          </Text>
+          <Text style={styles.desc}>Total Spent</Text>
         </View>
       </View>
       <View style={styles.contentBottom}>
@@ -63,6 +104,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#58626B",
+  },
+  topContent: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  numTransactionContainer: {
+    width: "48%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+  },
+  number: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#3585C6",
+    marginBottom: 5,
+  },
+  desc: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#3585C6",
   },
   contentBottom: {
     width: "100%",
