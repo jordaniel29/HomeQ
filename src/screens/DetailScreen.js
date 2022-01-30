@@ -62,7 +62,7 @@ export default function DetailScreen({ route, navigation }) {
       <View style={styles.imgContainer}>
         <Image
           source={{
-            uri: "https://firebasestorage.googleapis.com/v0/b/homeq-1397b.appspot.com/o/house%2Fhouse1.jpg?alt=media&token=c42cb19e-5db7-40eb-b13e-3d179989db9b",
+            uri: item.image,
           }}
           style={styles.image}
         />
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   },
   imgContainer: {
     width: "100%",
-    backgroundColor: "red",
   },
   image: {
     width: "100%",
