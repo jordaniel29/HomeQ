@@ -1,5 +1,8 @@
 # HomeQ
 
+## App Preview
+<p align=center><img width="50%" src="./assets/overview"/></p>
+
 ## Description
 
 An Application that sells and rents house for users. The application uses React Native, Expo, and Firebase as its' authentication and database
