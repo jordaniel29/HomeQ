@@ -1,7 +1,7 @@
 # HomeQ
 
 ## App Preview
-<p align=center><img width="50%" src="./assets/overview"/></p>
+<p align=center><img width="50%" src="assets/overview.png"/></p>
 
 ## Description
 
